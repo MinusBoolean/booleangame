@@ -3,6 +3,7 @@ services:
     name: booleangame-blog
     runtime: node
     plan: free
+    branch: 001-blog-news-platform
     buildCommand: cd my-app && npm install && npx prisma generate && npx prisma migrate deploy && npm run build
     startCommand: cd my-app && npm start
     envVars:
