@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 async function getBlogPosts() {
   const posts = await prisma.blogPost.findMany({

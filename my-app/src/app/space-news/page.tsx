@@ -2,7 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import { NewsList } from "@/components/news/NewsList";
 import { prisma } from "@/lib/db";
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 async function getSpaceNews() {
   const news = await prisma.news.findMany({
