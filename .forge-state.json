@@ -1,0 +1,53 @@
+{
+  "version": "1.0",
+  "task": "个人博客与新闻平台开发",
+  "started_at": "2025-06-16T09:30:00Z",
+  "current_phase": 1,
+  "total_phases": 5,
+  "git_branch": "001-blog-news-platform",
+  "initial_commit": "",
+  "phases": [
+    {
+      "id": 1,
+      "name": "项目初始化和基础架构",
+      "status": "in_progress",
+      "started_at": "2025-06-16T09:30:00Z",
+      "completed_at": null,
+      "commit_hash": ""
+    },
+    {
+      "id": 2,
+      "name": "数据库与认证系统",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "commit_hash": ""
+    },
+    {
+      "id": 3,
+      "name": "新闻系统实现",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "commit_hash": ""
+    },
+    {
+      "id": 4,
+      "name": "博客系统实现",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "commit_hash": ""
+    },
+    {
+      "id": 5,
+      "name": "管理后台与优化",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "commit_hash": ""
+    }
+  ],
+  "retry_count": 0,
+  "max_retries": 3
+}
