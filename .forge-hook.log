@@ -580,3 +580,15 @@
 [2026-06-16 11:04:03] Auto-approved: Bash
 [2026-06-16 11:04:13] Hook triggered - Tool: Bash
 [2026-06-16 11:04:13] Auto-approved: Bash
+[2026-06-16 11:04:22] Hook triggered - Tool: Bash
+[2026-06-16 11:04:22] Auto-approved: Bash
+[2026-06-16 11:06:02] Hook triggered - Tool: Bash
+[2026-06-16 11:06:02] Auto-approved: Bash
+[2026-06-16 11:07:07] [self-heal] Self-heal hook triggered
+[2026-06-16 11:07:07] [self-heal] Self-heal hook triggered
+[2026-06-16 11:07:07] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
+[2026-06-16 11:07:07] [self-heal] Last activity: 65 seconds ago
+[2026-06-16 11:07:07] [self-heal] Timeout detected (65 seconds), forcing continuation
+[2026-06-16 11:07:07] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
+[2026-06-16 11:07:07] [self-heal] Last activity: 65 seconds ago
+[2026-06-16 11:07:07] [self-heal] Timeout detected (65 seconds), forcing continuation
