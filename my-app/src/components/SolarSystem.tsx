@@ -200,9 +200,7 @@ export function SolarSystem() {
       setSolarVisible(true);
     }
     pullProgressRef.current = 0;
-    horizontalOffsetRef.current = 0;
     setPullProgress(0);
-    setHorizontalOffset(0);
   }, []);
 
   const solarVisibleRef = useRef(false);
@@ -274,15 +272,15 @@ export function SolarSystem() {
               />
             ))}
             <div
-              className="relative w-6 h-6 mt-[-1px] animate-pulse"
+              className="relative w-4 h-4 mt-[-1px] animate-pulse"
               style={{
                 background: "radial-gradient(circle at 35% 35%, #e9d5ff, #a78bfa, #7c3aed)",
                 borderRadius: "50%",
-                boxShadow: "0 0 15px rgba(167,139,250,0.8), 0 0 30px rgba(124,58,237,0.5)",
+                boxShadow: "0 0 10px rgba(167,139,250,0.8), 0 0 20px rgba(124,58,237,0.5)",
               }}
             >
               <div
-                className="absolute top-0.5 left-0.5 w-1.5 h-1.5 rounded-full"
+                className="absolute top-0.5 left-0.5 w-1 h-1 rounded-full"
                 style={{
                   background: "rgba(255,255,255,0.6)",
                   filter: "blur(1px)",
@@ -312,6 +310,7 @@ export function SolarSystem() {
           opacity: solarVisible ? 1 : 0,
           transform: solarVisible ? "translateY(0)" : "translateY(-100%)",
           pointerEvents: solarVisible ? "auto" : "none",
+          background: "radial-gradient(ellipse at center, #0a0a2e 0%, #000000 70%)",
         }}
         role="region"
         aria-label="太阳系交互模型"
