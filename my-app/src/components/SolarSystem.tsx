@@ -58,12 +58,15 @@ export function SolarSystem() {
   const [solarVisible, setSolarVisible] = useState(false);
   const [selectedPlanet, setSelectedPlanet] = useState<Planet | null>(null);
   const [pullProgress, setPullProgress] = useState(0);
+  const [horizontalOffset, setHorizontalOffset] = useState(0);
 
   const starsRef = useRef<Star[]>([]);
   const planetAnglesRef = useRef(PLANETS.map(() => Math.random() * Math.PI * 2));
   const isDraggingRef = useRef(false);
   const startYRef = useRef(0);
+  const startXRef = useRef(0);
   const pullProgressRef = useRef(0);
+  const horizontalOffsetRef = useRef(0);
   const rafStarRef = useRef<number>(0);
   const rafOrbitRef = useRef<number>(0);
   const lastTimeRef = useRef(0);
@@ -164,19 +167,28 @@ export function SolarSystem() {
   const getClientY = (e: MouseEvent | TouchEvent) =>
     "touches" in e ? e.touches[0].clientY : e.clientY;
 
+  const getClientX = (e: MouseEvent | TouchEvent) =>
+    "touches" in e ? e.touches[0].clientX : e.clientX;
+
   const handleStart = useCallback((e: MouseEvent | TouchEvent) => {
     if (solarVisibleRef.current) return;
     isDraggingRef.current = true;
     startYRef.current = getClientY(e);
+    startXRef.current = getClientX(e);
   }, []);
 
   const handleMove = useCallback((e: MouseEvent | TouchEvent) => {
     if (!isDraggingRef.current) return;
-    const diff = getClientY(e) - startYRef.current;
+    const diffY = getClientY(e) - startYRef.current;
+    const diffX = getClientX(e) - startXRef.current;
     const maxPull = window.innerHeight * 0.4;
-    const progress = Math.max(0, Math.min(1, diff / maxPull));
+    const progress = Math.max(0, Math.min(1, diffY / maxPull));
     pullProgressRef.current = progress;
     setPullProgress(progress);
+    const maxOffset = window.innerWidth * 0.15;
+    const clampedX = Math.max(-maxOffset, Math.min(maxOffset, diffX));
+    horizontalOffsetRef.current = clampedX;
+    setHorizontalOffset(clampedX);
   }, []);
 
   const handleEnd = useCallback(() => {
@@ -188,7 +200,9 @@ export function SolarSystem() {
       setSolarVisible(true);
     }
     pullProgressRef.current = 0;
+    horizontalOffsetRef.current = 0;
     setPullProgress(0);
+    setHorizontalOffset(0);
   }, []);
 
   const solarVisibleRef = useRef(false);
@@ -225,8 +239,12 @@ export function SolarSystem() {
 
       {!solarVisible && (
         <div
-          className="fixed top-0 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center cursor-grab select-none touch-none"
-          style={{ cursor: "grab" }}
+          className="fixed top-0 z-[100] flex flex-col items-center cursor-grab select-none touch-none"
+          style={{
+            cursor: "grab",
+            left: `calc(50% + ${horizontalOffset}px)`,
+            transform: "translateX(-50%)",
+          }}
           onMouseDown={handleStart}
           onTouchStart={handleStart}
           role="slider"
@@ -242,37 +260,36 @@ export function SolarSystem() {
             }
           }}
         >
-          {/* 星尘锁链 */}
           <div className="flex flex-col items-center">
-            {Array.from({ length: 6 }, (_, i) => (
+            {Array.from({ length: 5 }, (_, i) => (
               <div
                 key={i}
-                className="w-3 h-5 border-2 border-purple-400/60 rounded-full"
+                className="w-2 h-3.5 border-[1.5px] border-purple-400/60 rounded-full"
                 style={{
-                  marginTop: i === 0 ? 0 : "-2px",
+                  marginTop: i === 0 ? 0 : "-1px",
                   background: `linear-gradient(180deg, rgba(167,139,250,${0.1 + i * 0.05}), rgba(192,132,252,${0.05 + i * 0.03}))`,
-                  boxShadow: `0 0 ${4 + i}px rgba(167,139,250,${0.2 + i * 0.05})`,
-                  transform: `scaleX(${1 - i * 0.05})`,
+                  boxShadow: `0 0 ${3 + i}px rgba(167,139,250,${0.2 + i * 0.05})`,
+                  transform: `scaleX(${1 - i * 0.04})`,
                 }}
               />
             ))}
             <div
-              className="relative w-8 h-8 mt-[-2px] animate-pulse"
+              className="relative w-6 h-6 mt-[-1px] animate-pulse"
               style={{
                 background: "radial-gradient(circle at 35% 35%, #e9d5ff, #a78bfa, #7c3aed)",
                 borderRadius: "50%",
-                boxShadow: "0 0 20px rgba(167,139,250,0.8), 0 0 40px rgba(124,58,237,0.5), 0 0 60px rgba(167,139,250,0.3)",
+                boxShadow: "0 0 15px rgba(167,139,250,0.8), 0 0 30px rgba(124,58,237,0.5)",
               }}
             >
               <div
-                className="absolute top-1 left-1 w-2 h-2 rounded-full"
+                className="absolute top-0.5 left-0.5 w-1.5 h-1.5 rounded-full"
                 style={{
                   background: "rgba(255,255,255,0.6)",
-                  filter: "blur(2px)",
+                  filter: "blur(1px)",
                 }}
               />
             </div>
-            <span className="mt-2 text-xs text-purple-300/60 animate-bounce tracking-widest">
+            <span className="mt-1.5 text-[10px] text-purple-300/60 animate-bounce tracking-widest">
               下拉探索
             </span>
           </div>
