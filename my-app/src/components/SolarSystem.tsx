@@ -218,8 +218,6 @@ export function SolarSystem() {
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
-  const ropeHeight = 80 + pullProgress * 120;
-
   return (
     <>
       <canvas
@@ -245,24 +243,40 @@ export function SolarSystem() {
             }
           }}
         >
-          <div
-            className="w-10 h-[30px] rounded-b-[20px] relative"
-            style={{
-              background: "linear-gradient(180deg, #8b6914, #a67c00, #8b6914)",
-              boxShadow: "0 4px 15px rgba(139,105,20,0.5)",
-            }}
-          >
-            <span className="absolute bottom-[-20px] left-1/2 -translate-x-1/2 text-sm text-white/40 animate-bounce">
-              ⬇
+          {/* 星尘锁链 */}
+          <div className="flex flex-col items-center">
+            {Array.from({ length: 6 }, (_, i) => (
+              <div
+                key={i}
+                className="w-3 h-5 border-2 border-purple-400/60 rounded-full"
+                style={{
+                  marginTop: i === 0 ? 0 : "-2px",
+                  background: `linear-gradient(180deg, rgba(167,139,250,${0.1 + i * 0.05}), rgba(192,132,252,${0.05 + i * 0.03}))`,
+                  boxShadow: `0 0 ${4 + i}px rgba(167,139,250,${0.2 + i * 0.05})`,
+                  transform: `scaleX(${1 - i * 0.05})`,
+                }}
+              />
+            ))}
+            <div
+              className="relative w-8 h-8 mt-[-2px] animate-pulse"
+              style={{
+                background: "radial-gradient(circle at 35% 35%, #e9d5ff, #a78bfa, #7c3aed)",
+                borderRadius: "50%",
+                boxShadow: "0 0 20px rgba(167,139,250,0.8), 0 0 40px rgba(124,58,237,0.5), 0 0 60px rgba(167,139,250,0.3)",
+              }}
+            >
+              <div
+                className="absolute top-1 left-1 w-2 h-2 rounded-full"
+                style={{
+                  background: "rgba(255,255,255,0.6)",
+                  filter: "blur(2px)",
+                }}
+              />
+            </div>
+            <span className="mt-2 text-xs text-purple-300/60 animate-bounce tracking-widest">
+              下拉探索
             </span>
           </div>
-          <div
-            className="w-1.5 rounded-b-[3px]"
-            style={{
-              height: `${ropeHeight - 30}px`,
-              background: "linear-gradient(90deg, #6b5a14, #a67c00, #6b5a14)",
-            }}
-          />
         </div>
       )}
 
