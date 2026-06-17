@@ -592,3 +592,93 @@
 [2026-06-16 11:07:07] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
 [2026-06-16 11:07:07] [self-heal] Last activity: 65 seconds ago
 [2026-06-16 11:07:07] [self-heal] Timeout detected (65 seconds), forcing continuation
+[2026-06-17 10:26:39] Hook triggered - Tool: Bash
+[2026-06-17 10:26:39] Auto-approved: Bash
+[2026-06-17 10:26:40] Hook triggered - Tool: Bash
+[2026-06-17 10:26:40] Auto-approved: Bash
+[2026-06-17 10:26:53] Hook triggered - Tool: Bash
+[2026-06-17 10:26:53] Auto-approved: Bash
+[2026-06-17 10:26:59] Hook triggered - Tool: Bash
+[2026-06-17 10:26:59] Auto-approved: Bash
+[2026-06-17 10:27:07] Hook triggered - Tool: Bash
+[2026-06-17 10:27:07] Auto-approved: Bash
+[2026-06-17 10:27:12] Hook triggered - Tool: Bash
+[2026-06-17 10:27:12] Auto-approved: Bash
+[2026-06-17 10:27:44] Hook triggered - Tool: Write
+[2026-06-17 10:27:44] Auto-approved: Write
+[2026-06-17 10:27:50] Hook triggered - Tool: Write
+[2026-06-17 10:27:50] Auto-approved: Write
+[2026-06-17 10:27:50] Hook triggered - Tool: Edit
+[2026-06-17 10:27:50] Auto-approved: Edit
+[2026-06-17 10:28:02] Hook triggered - Tool: Bash
+[2026-06-17 10:28:02] Auto-approved: Bash
+[2026-06-17 10:28:16] Hook triggered - Tool: Write
+[2026-06-17 10:28:16] Auto-approved: Write
+[2026-06-17 10:28:34] Hook triggered - Tool: Write
+[2026-06-17 10:28:34] Auto-approved: Write
+[2026-06-17 10:28:41] Hook triggered - Tool: Write
+[2026-06-17 10:28:41] Auto-approved: Write
+[2026-06-17 10:28:47] Hook triggered - Tool: Write
+[2026-06-17 10:28:47] Auto-approved: Write
+[2026-06-17 10:28:49] Hook triggered - Tool: Bash
+[2026-06-17 10:28:49] Auto-approved: Bash
+[2026-06-17 10:29:06] Hook triggered - Tool: Write
+[2026-06-17 10:29:06] Auto-approved: Write
+[2026-06-17 10:29:13] Hook triggered - Tool: Edit
+[2026-06-17 10:29:13] Auto-approved: Edit
+[2026-06-17 10:29:28] Hook triggered - Tool: Bash
+[2026-06-17 10:29:28] Auto-approved: Bash
+[2026-06-17 10:29:56] Hook triggered - Tool: Write
+[2026-06-17 10:29:56] Auto-approved: Write
+[2026-06-17 10:30:06] [self-heal] Self-heal hook triggered
+[2026-06-17 10:30:07] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
+[2026-06-17 10:30:07] [self-heal] Last activity: 11 seconds ago
+[2026-06-17 10:30:07] [self-heal] All phases completed, exiting
+[2026-06-17 10:31:09] Hook triggered - Tool: Bash
+[2026-06-17 10:31:09] Auto-approved: Bash
+[2026-06-17 10:31:10] Hook triggered - Tool: Bash
+[2026-06-17 10:31:10] Auto-approved: Bash
+[2026-06-17 10:31:11] Hook triggered - Tool: Bash
+[2026-06-17 10:31:11] Auto-approved: Bash
+[2026-06-17 10:31:16] Hook triggered - Tool: Bash
+[2026-06-17 10:31:16] Auto-approved: Bash
+[2026-06-17 10:31:28] Hook triggered - Tool: Bash
+[2026-06-17 10:31:28] Auto-approved: Bash
+[2026-06-17 10:31:32] [self-heal] Self-heal hook triggered
+[2026-06-17 10:31:32] [self-heal] Self-heal hook triggered
+[2026-06-17 10:31:32] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
+[2026-06-17 10:31:32] [self-heal] Last activity: 4 seconds ago
+[2026-06-17 10:31:32] [self-heal] All phases completed, exiting
+[2026-06-17 10:31:32] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
+[2026-06-17 10:31:32] [self-heal] Last activity: 4 seconds ago
+[2026-06-17 10:31:32] [self-heal] All phases completed, exiting
+[2026-06-17 10:33:12] [self-heal] Self-heal hook triggered
+[2026-06-17 10:33:12] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
+[2026-06-17 10:33:12] [self-heal] Last activity: 104 seconds ago
+[2026-06-17 10:33:12] [self-heal] Timeout detected (104 seconds), forcing continuation
+[2026-06-17 10:38:20] Hook triggered - Tool: Write
+[2026-06-17 10:38:20] Auto-approved: Write
+[2026-06-17 10:39:27] [self-heal] Self-heal hook triggered
+[2026-06-17 10:39:27] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
+[2026-06-17 10:39:27] [self-heal] Last activity: 67 seconds ago
+[2026-06-17 10:39:27] [self-heal] Timeout detected (67 seconds), forcing continuation
+[2026-06-17 10:52:54] [self-heal] Self-heal hook triggered
+[2026-06-17 10:52:55] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
+[2026-06-17 10:52:55] [self-heal] Last activity: 875 seconds ago
+[2026-06-17 10:52:55] [self-heal] Timeout detected (875 seconds), forcing continuation
+[2026-06-17 10:53:29] Hook triggered - Tool: Edit
+[2026-06-17 10:53:29] Auto-approved: Edit
+[2026-06-17 10:53:39] Hook triggered - Tool: Edit
+[2026-06-17 10:53:40] Auto-approved: Edit
+[2026-06-17 10:53:56] Hook triggered - Tool: Edit
+[2026-06-17 10:53:56] Auto-approved: Edit
+[2026-06-17 10:54:18] Hook triggered - Tool: Edit
+[2026-06-17 10:54:18] Auto-approved: Edit
+[2026-06-17 10:54:27] Hook triggered - Tool: Edit
+[2026-06-17 10:54:27] Auto-approved: Edit
+[2026-06-17 10:54:40] Hook triggered - Tool: Edit
+[2026-06-17 10:54:40] Auto-approved: Edit
+[2026-06-17 10:54:48] Hook triggered - Tool: Edit
+[2026-06-17 10:54:48] Auto-approved: Edit
+[2026-06-17 10:55:03] Hook triggered - Tool: Bash
+[2026-06-17 10:55:03] Auto-approved: Bash
