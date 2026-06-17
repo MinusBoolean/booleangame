@@ -58,16 +58,13 @@ export function SolarSystem() {
   const [solarVisible, setSolarVisible] = useState(false);
   const [selectedPlanet, setSelectedPlanet] = useState<Planet | null>(null);
   const [pullProgress, setPullProgress] = useState(0);
-  const [horizontalOffset, setHorizontalOffset] = useState(0);
   const [timeSpeed, setTimeSpeed] = useState(1);
 
   const starsRef = useRef<Star[]>([]);
   const planetAnglesRef = useRef(PLANETS.map(() => Math.random() * Math.PI * 2));
   const isDraggingRef = useRef(false);
   const startYRef = useRef(0);
-  const startXRef = useRef(0);
   const pullProgressRef = useRef(0);
-  const horizontalOffsetRef = useRef(0);
   const rafStarRef = useRef<number>(0);
   const rafOrbitRef = useRef<number>(0);
   const lastTimeRef = useRef(0);
@@ -179,34 +176,24 @@ export function SolarSystem() {
   const getClientY = (e: MouseEvent | TouchEvent) =>
     "touches" in e ? e.touches[0].clientY : e.clientY;
 
-  const getClientX = (e: MouseEvent | TouchEvent) =>
-    "touches" in e ? e.touches[0].clientX : e.clientX;
-
   const handleStart = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     if (solarVisibleRef.current) return;
     isDraggingRef.current = true;
     startYRef.current = "touches" in e ? e.touches[0].clientY : e.clientY;
-    startXRef.current = "touches" in e ? e.touches[0].clientX : e.clientX;
   }, []);
 
   const handleMove = useCallback((e: MouseEvent | TouchEvent) => {
     if (!isDraggingRef.current) return;
     const diffY = getClientY(e) - startYRef.current;
-    const diffX = getClientX(e) - startXRef.current;
     const maxPull = window.innerHeight * 0.4;
     const progress = Math.max(0, Math.min(1, diffY / maxPull));
     pullProgressRef.current = progress;
     setPullProgress(progress);
-    const maxOffset = window.innerWidth * 0.4;
-    const newOffset = horizontalOffsetRef.current + diffX;
-    const clampedX = Math.max(-maxOffset, Math.min(maxOffset, newOffset));
-    setHorizontalOffset(clampedX);
   }, []);
 
   const handleEnd = useCallback(() => {
     if (!isDraggingRef.current) return;
     isDraggingRef.current = false;
-    horizontalOffsetRef.current = horizontalOffsetRef.current;
     const currentProgress = pullProgressRef.current;
     const diff = currentProgress * window.innerHeight * 0.4;
     if (diff > window.innerHeight * 0.3) {
@@ -250,11 +237,8 @@ export function SolarSystem() {
 
       {!solarVisible && (
         <div
-          className="fixed top-0 left-1/2 z-[100] flex flex-col items-center cursor-grab select-none touch-none"
-          style={{
-            cursor: "grab",
-            transform: `translateX(calc(-50% + ${horizontalOffset}px))`,
-          }}
+          className="fixed top-0 right-8 z-[100] flex flex-col items-center cursor-grab select-none touch-none"
+          style={{ cursor: "grab" }}
           onMouseDown={handleStart}
           onTouchStart={handleStart}
           role="slider"
@@ -310,7 +294,7 @@ export function SolarSystem() {
         <div className="fixed top-4 right-4 z-[150] flex flex-col gap-2">
           <button
             className="bg-purple-500/20 border border-purple-500/40 text-white/70 px-4 py-2 rounded-full text-sm backdrop-blur-md hover:bg-purple-500/40 transition-colors"
-            onClick={() => { setSolarVisible(false); setSelectedPlanet(null); setHorizontalOffset(0); }}
+            onClick={() => { setSolarVisible(false); setSelectedPlanet(null); }}
             aria-label="收起太阳系"
           >
             ✕ 收起
