@@ -10,3 +10,25 @@
 [2026-06-17 11:11:58] Auto-approved: Bash
 [2026-06-17 11:12:13] Hook triggered - Tool: Bash
 [2026-06-17 11:12:13] Auto-approved: Bash
+[2026-06-17 11:12:41] [self-heal] Self-heal hook triggered
+[2026-06-17 11:12:42] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
+[2026-06-17 11:12:42] [self-heal] Last activity: 29 seconds ago
+[2026-06-17 11:12:42] [self-heal] All phases completed, exiting
+[2026-06-17 11:13:10] Hook triggered - Tool: Bash
+[2026-06-17 11:13:10] Auto-approved: Bash
+[2026-06-17 11:13:40] Hook triggered - Tool: Bash
+[2026-06-17 11:13:41] Auto-approved: Bash
+[2026-06-17 11:13:52] Hook triggered - Tool: Bash
+[2026-06-17 11:13:52] Auto-approved: Bash
+[2026-06-17 11:15:32] Hook triggered - Tool: Bash
+[2026-06-17 11:15:33] Auto-approved: Bash
+[2026-06-17 11:15:45] [self-heal] Self-heal hook triggered
+[2026-06-17 11:15:45] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
+[2026-06-17 11:15:45] [self-heal] Last activity: 12 seconds ago
+[2026-06-17 11:15:45] [self-heal] All phases completed, exiting
+[2026-06-17 11:20:37] Hook triggered - Tool: Edit
+[2026-06-17 11:20:37] Auto-approved: Edit
+[2026-06-17 11:21:05] Hook triggered - Tool: Edit
+[2026-06-17 11:21:05] Auto-approved: Edit
+[2026-06-17 11:21:18] Hook triggered - Tool: Bash
+[2026-06-17 11:21:18] Auto-approved: Bash
