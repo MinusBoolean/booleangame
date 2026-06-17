@@ -182,7 +182,8 @@ export function SolarSystem() {
   const handleEnd = useCallback(() => {
     if (!isDraggingRef.current) return;
     isDraggingRef.current = false;
-    const diff = pullProgressRef.current * window.innerHeight * 0.4;
+    const currentProgress = pullProgressRef.current;
+    const diff = currentProgress * window.innerHeight * 0.4;
     if (diff > window.innerHeight * 0.3) {
       setSolarVisible(true);
     }
@@ -194,21 +195,17 @@ export function SolarSystem() {
   useEffect(() => { solarVisibleRef.current = solarVisible; }, [solarVisible]);
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleStart);
-    document.addEventListener("touchstart", handleStart, { passive: false });
     document.addEventListener("mousemove", handleMove);
     document.addEventListener("touchmove", handleMove, { passive: false });
     document.addEventListener("mouseup", handleEnd);
     document.addEventListener("touchend", handleEnd);
     return () => {
-      document.removeEventListener("mousedown", handleStart);
-      document.removeEventListener("touchstart", handleStart);
       document.removeEventListener("mousemove", handleMove);
       document.removeEventListener("touchmove", handleMove);
       document.removeEventListener("mouseup", handleEnd);
       document.removeEventListener("touchend", handleEnd);
     };
-  }, [handleStart, handleMove, handleEnd]);
+  }, [handleMove, handleEnd]);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -230,6 +227,8 @@ export function SolarSystem() {
         <div
           className="fixed top-0 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center cursor-grab select-none touch-none"
           style={{ cursor: "grab" }}
+          onMouseDown={handleStart}
+          onTouchStart={handleStart}
           role="slider"
           aria-label="下拉显示太阳系"
           aria-valuemin={0}
