@@ -70,6 +70,14 @@ export function SolarSystem() {
   const rafStarRef = useRef<number>(0);
   const rafOrbitRef = useRef<number>(0);
   const lastTimeRef = useRef(0);
+  const [orbitScale, setOrbitScale] = useState(0.5);
+
+  useEffect(() => {
+    setOrbitScale(Math.min(window.innerWidth, window.innerHeight) / 850);
+    const handleResize = () => setOrbitScale(Math.min(window.innerWidth, window.innerHeight) / 850);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const initStars = useCallback(() => {
     const canvas = canvasRef.current;
@@ -325,10 +333,7 @@ export function SolarSystem() {
         />
 
         {PLANETS.map((planet) => {
-          const scale = typeof window !== "undefined"
-            ? Math.min(window.innerWidth, window.innerHeight) / 850
-            : 0.5;
-          const r = planet.orbitRadius * scale;
+          const r = planet.orbitRadius * orbitScale;
           return (
             <div
               key={`orbit-${planet.nameEn}`}
