@@ -170,11 +170,11 @@ export function SolarSystem() {
   const getClientX = (e: MouseEvent | TouchEvent) =>
     "touches" in e ? e.touches[0].clientX : e.clientX;
 
-  const handleStart = useCallback((e: MouseEvent | TouchEvent) => {
+  const handleStart = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     if (solarVisibleRef.current) return;
     isDraggingRef.current = true;
-    startYRef.current = getClientY(e);
-    startXRef.current = getClientX(e);
+    startYRef.current = "touches" in e ? e.touches[0].clientY : e.clientY;
+    startXRef.current = "touches" in e ? e.touches[0].clientX : e.clientX;
   }, []);
 
   const handleMove = useCallback((e: MouseEvent | TouchEvent) => {
