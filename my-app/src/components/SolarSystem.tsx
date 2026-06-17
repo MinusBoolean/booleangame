@@ -59,6 +59,7 @@ export function SolarSystem() {
   const [selectedPlanet, setSelectedPlanet] = useState<Planet | null>(null);
   const [pullProgress, setPullProgress] = useState(0);
   const [horizontalOffset, setHorizontalOffset] = useState(0);
+  const [timeSpeed, setTimeSpeed] = useState(1);
 
   const starsRef = useRef<Star[]>([]);
   const planetAnglesRef = useRef(PLANETS.map(() => Math.random() * Math.PI * 2));
@@ -70,7 +71,10 @@ export function SolarSystem() {
   const rafStarRef = useRef<number>(0);
   const rafOrbitRef = useRef<number>(0);
   const lastTimeRef = useRef(0);
+  const timeSpeedRef = useRef(1);
   const [orbitScale, setOrbitScale] = useState(0.5);
+
+  useEffect(() => { timeSpeedRef.current = timeSpeed; }, [timeSpeed]);
 
   useEffect(() => {
     setOrbitScale(Math.min(window.innerWidth, window.innerHeight) / 850);
@@ -133,7 +137,7 @@ export function SolarSystem() {
     planets.forEach((el) => {
       const i = parseInt(el.dataset.planetIndex || "0");
       const planet = PLANETS[i];
-      const speed = (365 / planet.orbitalPeriod) * 0.5;
+      const speed = (365 / planet.orbitalPeriod) * 0.5 * timeSpeedRef.current;
       planetAnglesRef.current[i] += speed * dt;
       const r = planet.orbitRadius * scale;
       const x = cx + Math.cos(planetAnglesRef.current[i]) * r - planet.size / 2;
@@ -194,14 +198,15 @@ export function SolarSystem() {
     pullProgressRef.current = progress;
     setPullProgress(progress);
     const maxOffset = window.innerWidth * 0.4;
-    const clampedX = Math.max(-maxOffset, Math.min(maxOffset, diffX));
-    horizontalOffsetRef.current = clampedX;
+    const newOffset = horizontalOffsetRef.current + diffX;
+    const clampedX = Math.max(-maxOffset, Math.min(maxOffset, newOffset));
     setHorizontalOffset(clampedX);
   }, []);
 
   const handleEnd = useCallback(() => {
     if (!isDraggingRef.current) return;
     isDraggingRef.current = false;
+    horizontalOffsetRef.current = horizontalOffsetRef.current;
     const currentProgress = pullProgressRef.current;
     const diff = currentProgress * window.innerHeight * 0.4;
     if (diff > window.innerHeight * 0.3) {
@@ -302,13 +307,28 @@ export function SolarSystem() {
       )}
 
       {solarVisible && (
-        <button
-          className="fixed top-4 right-4 z-[150] bg-purple-500/20 border border-purple-500/40 text-white/70 px-4 py-2 rounded-full text-sm backdrop-blur-md hover:bg-purple-500/40 transition-colors"
-          onClick={() => { setSolarVisible(false); setSelectedPlanet(null); }}
-          aria-label="收起太阳系"
-        >
-          ✕ 收起
-        </button>
+        <div className="fixed top-4 right-4 z-[150] flex flex-col gap-2">
+          <button
+            className="bg-purple-500/20 border border-purple-500/40 text-white/70 px-4 py-2 rounded-full text-sm backdrop-blur-md hover:bg-purple-500/40 transition-colors"
+            onClick={() => { setSolarVisible(false); setSelectedPlanet(null); setHorizontalOffset(0); }}
+            aria-label="收起太阳系"
+          >
+            ✕ 收起
+          </button>
+          <div className="bg-purple-500/20 border border-purple-500/40 text-white/70 px-3 py-2 rounded-full text-sm backdrop-blur-md flex items-center gap-2">
+            <span className="text-xs">速度</span>
+            <input
+              type="range"
+              min="0.1"
+              max="5"
+              step="0.1"
+              value={timeSpeed}
+              onChange={(e) => setTimeSpeed(parseFloat(e.target.value))}
+              className="w-20 accent-purple-400"
+            />
+            <span className="text-xs w-8">{timeSpeed.toFixed(1)}x</span>
+          </div>
+        </div>
       )}
 
       <div
@@ -322,13 +342,19 @@ export function SolarSystem() {
         role="region"
         aria-label="太阳系交互模型"
       >
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full z-10"
+        <button
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full z-10 cursor-pointer hover:scale-110 transition-transform"
           style={{
             background: "radial-gradient(circle at 35% 35%, #fff7ad, #ffa500, #ff4500)",
             boxShadow: "0 0 40px rgba(255,165,0,0.8), 0 0 80px rgba(255,69,0,0.5), 0 0 120px rgba(255,165,0,0.3)",
             animation: "sunGlow 3s ease-in-out infinite",
           }}
+          onClick={() => setSelectedPlanet({
+            name: "太阳", nameEn: "Sun", diameter: 1392700, distance: 0,
+            orbitalPeriod: 0, moons: 0, temperature: "5500°C（表面）",
+            color: "#ffa500", size: 80, orbitRadius: 0,
+          })}
+          aria-label="太阳 - 点击查看参数"
         />
 
         {PLANETS.map((planet) => {
@@ -420,9 +446,9 @@ export function SolarSystem() {
             </div>
             {[
               { label: "直径", value: `${selectedPlanet.diameter.toLocaleString()} km` },
-              { label: "距太阳", value: `${selectedPlanet.distance.toLocaleString()} 百万km` },
-              { label: "公转周期", value: `${selectedPlanet.orbitalPeriod.toLocaleString()} 天` },
-              { label: "卫星数", value: String(selectedPlanet.moons) },
+              { label: "距太阳", value: selectedPlanet.distance > 0 ? `${selectedPlanet.distance.toLocaleString()} 百万km` : "中心" },
+              { label: "公转周期", value: selectedPlanet.orbitalPeriod > 0 ? `${selectedPlanet.orbitalPeriod.toLocaleString()} 天` : "—" },
+              { label: "卫星数", value: selectedPlanet.moons > 0 ? String(selectedPlanet.moons) : "—" },
               { label: "表面温度", value: selectedPlanet.temperature },
             ].map(({ label, value }) => (
               <div
