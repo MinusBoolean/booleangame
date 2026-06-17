@@ -245,11 +245,10 @@ export function SolarSystem() {
 
       {!solarVisible && (
         <div
-          className="fixed top-0 z-[100] flex flex-col items-center cursor-grab select-none touch-none"
+          className="fixed top-0 left-1/2 z-[100] flex flex-col items-center cursor-grab select-none touch-none"
           style={{
             cursor: "grab",
-            left: `calc(50% + ${horizontalOffset}px)`,
-            transform: "translateX(-50%)",
+            transform: `translateX(calc(-50% + ${horizontalOffset}px))`,
           }}
           onMouseDown={handleStart}
           onTouchStart={handleStart}
