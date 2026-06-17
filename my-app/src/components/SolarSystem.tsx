@@ -59,19 +59,15 @@ export function SolarSystem() {
   const [selectedPlanet, setSelectedPlanet] = useState<Planet | null>(null);
   const [pullProgress, setPullProgress] = useState(0);
   const [timeSpeed, setTimeSpeed] = useState(1);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startY, setStartY] = useState(0);
 
   const starsRef = useRef<Star[]>([]);
   const planetAnglesRef = useRef(PLANETS.map(() => Math.random() * Math.PI * 2));
-  const isDraggingRef = useRef(false);
-  const startYRef = useRef(0);
-  const pullProgressRef = useRef(0);
   const rafStarRef = useRef<number>(0);
   const rafOrbitRef = useRef<number>(0);
   const lastTimeRef = useRef(0);
-  const timeSpeedRef = useRef(1);
   const [orbitScale, setOrbitScale] = useState(0.5);
-
-  useEffect(() => { timeSpeedRef.current = timeSpeed; }, [timeSpeed]);
 
   useEffect(() => {
     setOrbitScale(Math.min(window.innerWidth, window.innerHeight) / 850);
@@ -134,7 +130,7 @@ export function SolarSystem() {
     planets.forEach((el) => {
       const i = parseInt(el.dataset.planetIndex || "0");
       const planet = PLANETS[i];
-      const speed = (365 / planet.orbitalPeriod) * 0.5 * timeSpeedRef.current;
+      const speed = (365 / planet.orbitalPeriod) * 0.5 * timeSpeed;
       planetAnglesRef.current[i] += speed * dt;
       const r = planet.orbitRadius * scale;
       const x = cx + Math.cos(planetAnglesRef.current[i]) * r - planet.size / 2;
@@ -143,7 +139,7 @@ export function SolarSystem() {
     });
 
     rafOrbitRef.current = requestAnimationFrame(animateOrbits);
-  }, []);
+  }, [timeSpeed]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -173,51 +169,59 @@ export function SolarSystem() {
     return () => cancelAnimationFrame(rafOrbitRef.current);
   }, [solarVisible, animateOrbits]);
 
-  const getClientY = (e: MouseEvent | TouchEvent) =>
-    "touches" in e ? e.touches[0].clientY : e.clientY;
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (solarVisible) return;
+    e.preventDefault();
+    setIsDragging(true);
+    setStartY(e.clientY);
+  };
 
-  const handleStart = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    if (solarVisibleRef.current) return;
-    isDraggingRef.current = true;
-    startYRef.current = "touches" in e ? e.touches[0].clientY : e.clientY;
-  }, []);
-
-  const handleMove = useCallback((e: MouseEvent | TouchEvent) => {
-    if (!isDraggingRef.current) return;
-    const diffY = getClientY(e) - startYRef.current;
-    const maxPull = window.innerHeight * 0.4;
-    const progress = Math.max(0, Math.min(1, diffY / maxPull));
-    pullProgressRef.current = progress;
-    setPullProgress(progress);
-  }, []);
-
-  const handleEnd = useCallback(() => {
-    if (!isDraggingRef.current) return;
-    isDraggingRef.current = false;
-    const currentProgress = pullProgressRef.current;
-    const diff = currentProgress * window.innerHeight * 0.4;
-    if (diff > window.innerHeight * 0.3) {
-      setSolarVisible(true);
-    }
-    pullProgressRef.current = 0;
-    setPullProgress(0);
-  }, []);
-
-  const solarVisibleRef = useRef(false);
-  useEffect(() => { solarVisibleRef.current = solarVisible; }, [solarVisible]);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (solarVisible) return;
+    setIsDragging(true);
+    setStartY(e.touches[0].clientY);
+  };
 
   useEffect(() => {
-    document.addEventListener("mousemove", handleMove);
-    document.addEventListener("touchmove", handleMove, { passive: false });
+    if (!isDragging) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const diff = e.clientY - startY;
+      const maxPull = window.innerHeight * 0.4;
+      const progress = Math.max(0, Math.min(1, diff / maxPull));
+      setPullProgress(progress);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const diff = e.touches[0].clientY - startY;
+      const maxPull = window.innerHeight * 0.4;
+      const progress = Math.max(0, Math.min(1, diff / maxPull));
+      setPullProgress(progress);
+    };
+
+    const handleEnd = () => {
+      setIsDragging(false);
+      setPullProgress((prev) => {
+        const diff = prev * window.innerHeight * 0.4;
+        if (diff > window.innerHeight * 0.3) {
+          setSolarVisible(true);
+        }
+        return 0;
+      });
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
     document.addEventListener("mouseup", handleEnd);
     document.addEventListener("touchend", handleEnd);
+
     return () => {
-      document.removeEventListener("mousemove", handleMove);
-      document.removeEventListener("touchmove", handleMove);
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("touchmove", handleTouchMove);
       document.removeEventListener("mouseup", handleEnd);
       document.removeEventListener("touchend", handleEnd);
     };
-  }, [handleMove, handleEnd]);
+  }, [isDragging, startY]);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -237,10 +241,10 @@ export function SolarSystem() {
 
       {!solarVisible && (
         <div
-          className="fixed top-0 right-8 z-[100] flex flex-col items-center cursor-grab select-none touch-none"
-          style={{ cursor: "grab" }}
-          onMouseDown={handleStart}
-          onTouchStart={handleStart}
+          className="fixed top-0 right-8 z-[100] cursor-grab select-none touch-none p-4"
+          style={{ cursor: isDragging ? "grabbing" : "grab" }}
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
           role="slider"
           aria-label="下拉显示太阳系"
           aria-valuemin={0}

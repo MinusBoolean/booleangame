@@ -450,3 +450,35 @@
 [2026-06-17 14:00:39] Auto-approved: Edit
 [2026-06-17 14:00:49] Hook triggered - Tool: Bash
 [2026-06-17 14:00:50] Auto-approved: Bash
+[2026-06-17 14:00:59] [self-heal] Self-heal hook triggered
+[2026-06-17 14:00:59] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
+[2026-06-17 14:00:59] [self-heal] Last activity: 9 seconds ago
+[2026-06-17 14:00:59] [self-heal] All phases completed, exiting
+[2026-06-17 14:02:31] Hook triggered - Tool: Bash
+[2026-06-17 14:02:31] Auto-approved: Bash
+[2026-06-17 14:02:42] Hook triggered - Tool: Bash
+[2026-06-17 14:02:43] Auto-approved: Bash
+[2026-06-17 14:03:28] [self-heal] Self-heal hook triggered
+[2026-06-17 14:03:28] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
+[2026-06-17 14:03:28] [self-heal] Last activity: 45 seconds ago
+[2026-06-17 14:03:28] [self-heal] All phases completed, exiting
+[2026-06-17 14:04:00] Hook triggered - Tool: Bash
+[2026-06-17 14:04:00] Auto-approved: Bash
+[2026-06-17 14:04:12] Hook triggered - Tool: Bash
+[2026-06-17 14:04:12] Auto-approved: Bash
+[2026-06-17 14:05:42] Hook triggered - Tool: Edit
+[2026-06-17 14:05:42] Auto-approved: Edit
+[2026-06-17 14:05:47] [self-heal] Self-heal hook triggered
+[2026-06-17 14:05:47] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
+[2026-06-17 14:05:47] [self-heal] Last activity: 5 seconds ago
+[2026-06-17 14:05:47] [self-heal] All phases completed, exiting
+[2026-06-17 14:05:47] [self-heal] Self-heal hook triggered
+[2026-06-17 14:05:47] [self-heal] Current phase: 5 / 5, Retry: 0 / 3
+[2026-06-17 14:05:47] [self-heal] Last activity: 5 seconds ago
+[2026-06-17 14:05:47] [self-heal] All phases completed, exiting
+[2026-06-17 14:08:35] Hook triggered - Tool: Write
+[2026-06-17 14:08:35] Auto-approved: Write
+[2026-06-17 14:09:17] Hook triggered - Tool: Bash
+[2026-06-17 14:09:17] Auto-approved: Bash
+[2026-06-17 14:10:14] Hook triggered - Tool: Bash
+[2026-06-17 14:10:14] Auto-approved: Bash
