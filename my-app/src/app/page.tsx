@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       <SolarSystem />
-      <div className="relative z-10">
+      <div className="relative z-10 bg-background/95 backdrop-blur-sm">
         <Navbar />
         <main className="flex-1">
           <section className="container py-12 md:py-24 lg:py-32">

@@ -55,7 +55,6 @@ interface Star {
 
 export function SolarSystem() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const ropeRef = useRef<HTMLDivElement>(null);
   const [solarVisible, setSolarVisible] = useState(false);
   const [selectedPlanet, setSelectedPlanet] = useState<Planet | null>(null);
   const [pullProgress, setPullProgress] = useState(0);
@@ -64,12 +63,10 @@ export function SolarSystem() {
   const planetAnglesRef = useRef(PLANETS.map(() => Math.random() * Math.PI * 2));
   const isDraggingRef = useRef(false);
   const startYRef = useRef(0);
-  const solarVisibleRef = useRef(false);
+  const pullProgressRef = useRef(0);
   const rafStarRef = useRef<number>(0);
   const rafOrbitRef = useRef<number>(0);
   const lastTimeRef = useRef(0);
-
-  useEffect(() => { solarVisibleRef.current = solarVisible; }, [solarVisible]);
 
   const initStars = useCallback(() => {
     const canvas = canvasRef.current;
@@ -164,40 +161,54 @@ export function SolarSystem() {
     return () => cancelAnimationFrame(rafOrbitRef.current);
   }, [solarVisible, animateOrbits]);
 
-  const getClientY = (e: React.MouseEvent | React.TouchEvent) =>
+  const getClientY = (e: MouseEvent | TouchEvent) =>
     "touches" in e ? e.touches[0].clientY : e.clientY;
 
-  const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
-    if (solarVisible) return;
+  const handleStart = useCallback((e: MouseEvent | TouchEvent) => {
+    if (solarVisibleRef.current) return;
     isDraggingRef.current = true;
     startYRef.current = getClientY(e);
-  };
+  }, []);
 
-  const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
+  const handleMove = useCallback((e: MouseEvent | TouchEvent) => {
     if (!isDraggingRef.current) return;
     const diff = getClientY(e) - startYRef.current;
     const maxPull = window.innerHeight * 0.4;
     const progress = Math.max(0, Math.min(1, diff / maxPull));
+    pullProgressRef.current = progress;
     setPullProgress(progress);
-  };
+  }, []);
 
-  const handleEnd = () => {
+  const handleEnd = useCallback(() => {
     if (!isDraggingRef.current) return;
     isDraggingRef.current = false;
-    const threshold = window.innerHeight * 0.3;
-    const diff = pullProgress * window.innerHeight * 0.4;
-    if (diff > threshold) {
+    const diff = pullProgressRef.current * window.innerHeight * 0.4;
+    if (diff > window.innerHeight * 0.3) {
       setSolarVisible(true);
     }
+    pullProgressRef.current = 0;
     setPullProgress(0);
-  };
+  }, []);
 
-  const handleRopeKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      setSolarVisible((v) => !v);
-    }
-  };
+  const solarVisibleRef = useRef(false);
+  useEffect(() => { solarVisibleRef.current = solarVisible; }, [solarVisible]);
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleStart);
+    document.addEventListener("touchstart", handleStart, { passive: false });
+    document.addEventListener("mousemove", handleMove);
+    document.addEventListener("touchmove", handleMove, { passive: false });
+    document.addEventListener("mouseup", handleEnd);
+    document.addEventListener("touchend", handleEnd);
+    return () => {
+      document.removeEventListener("mousedown", handleStart);
+      document.removeEventListener("touchstart", handleStart);
+      document.removeEventListener("mousemove", handleMove);
+      document.removeEventListener("touchmove", handleMove);
+      document.removeEventListener("mouseup", handleEnd);
+      document.removeEventListener("touchend", handleEnd);
+    };
+  }, [handleStart, handleMove, handleEnd]);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -213,29 +224,26 @@ export function SolarSystem() {
     <>
       <canvas
         ref={canvasRef}
-        className="fixed inset-0 z-0"
+        className="fixed inset-0 z-0 pointer-events-none"
         aria-hidden="true"
       />
 
       {!solarVisible && (
         <div
-          ref={ropeRef}
           className="fixed top-0 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center cursor-grab select-none touch-none"
-          style={{ cursor: isDraggingRef.current ? "grabbing" : "grab" }}
-          onMouseDown={handleStart}
-          onTouchStart={handleStart}
-          onMouseMove={handleMove}
-          onTouchMove={handleMove}
-          onMouseUp={handleEnd}
-          onTouchEnd={handleEnd}
-          onMouseLeave={handleEnd}
-          onKeyDown={handleRopeKeyDown}
+          style={{ cursor: "grab" }}
           role="slider"
           aria-label="下拉显示太阳系"
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={Math.round(pullProgress * 100)}
           tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setSolarVisible((v) => !v);
+            }
+          }}
         >
           <div
             className="w-10 h-[30px] rounded-b-[20px] relative"
