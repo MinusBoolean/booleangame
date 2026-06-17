@@ -193,7 +193,7 @@ export function SolarSystem() {
     const progress = Math.max(0, Math.min(1, diffY / maxPull));
     pullProgressRef.current = progress;
     setPullProgress(progress);
-    const maxOffset = window.innerWidth * 0.15;
+    const maxOffset = window.innerWidth * 0.4;
     const clampedX = Math.max(-maxOffset, Math.min(maxOffset, diffX));
     horizontalOffsetRef.current = clampedX;
     setHorizontalOffset(clampedX);
