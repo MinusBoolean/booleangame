@@ -77,10 +77,11 @@ export function SolarSystem() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentLayer, setCurrentLayer] = useState<Layer>("solar");
   const [selectedPlanet, setSelectedPlanet] = useState<Planet | null>(null);
-  const [pullProgress, setPullProgress] = useState(0);
+  const [pullDistance, setPullDistance] = useState(0);
   const [timeSpeed, setTimeSpeed] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
   const startYRef = useRef(0);
+  const maxPullDistance = 300; // 最大下拉距离（像素）
 
   const starsRef = useRef<Star[]>([]);
   const planetAnglesRef = useRef(PLANETS.map(() => Math.random() * Math.PI * 2));
@@ -207,27 +208,28 @@ export function SolarSystem() {
 
     const handleMouseMove = (e: MouseEvent) => {
       const diff = e.clientY - startYRef.current;
-      const maxPull = window.innerHeight * 0.4;
-      const progress = Math.max(0, Math.min(1, diff / maxPull));
-      setPullProgress(progress);
+      const distance = Math.max(0, Math.min(maxPullDistance, diff));
+      setPullDistance(distance);
     };
 
     const handleTouchMove = (e: TouchEvent) => {
       const diff = e.touches[0].clientY - startYRef.current;
-      const maxPull = window.innerHeight * 0.4;
-      const progress = Math.max(0, Math.min(1, diff / maxPull));
-      setPullProgress(progress);
+      const distance = Math.max(0, Math.min(maxPullDistance, diff));
+      setPullDistance(distance);
     };
 
     const handleEnd = () => {
-      setIsDragging(false);
-      setPullProgress((prev) => {
-        const diff = prev * window.innerHeight * 0.4;
-        if (diff > window.innerHeight * 0.3) {
+      setPullDistance((prev) => {
+        if (prev > maxPullDistance * 0.7) {
           setIsVisible(true);
         }
-        return 0;
+        return prev;
       });
+      setIsDragging(false);
+      // 延迟复位，让过渡动画生效
+      setTimeout(() => {
+        setPullDistance(0);
+      }, 50);
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -274,7 +276,7 @@ export function SolarSystem() {
           aria-label="下拉显示宇宙"
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-valuenow={Math.round(pullProgress * 100)}
+          aria-valuenow={Math.round((pullDistance / maxPullDistance) * 100)}
           tabIndex={0}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
@@ -284,17 +286,38 @@ export function SolarSystem() {
           }}
         >
           <div className="flex flex-col items-center">
-            {/* 绳子链条 */}
+            {/* 新增链子 - 连续平滑延伸 */}
+            {pullDistance > 0 && (
+              <div
+                style={{
+                  width: "12px",
+                  height: `${pullDistance}px`,
+                  background: `repeating-linear-gradient(
+                    180deg,
+                    rgba(167,139,250,0.3) 0px,
+                    rgba(192,132,252,0.2) 8px,
+                    rgba(167,139,250,0.15) 10px,
+                    transparent 10px,
+                    transparent 14px
+                  )`,
+                  borderLeft: "1.5px solid rgba(167,139,250,0.4)",
+                  borderRight: "1.5px solid rgba(167,139,250,0.4)",
+                  borderRadius: "6px",
+                  boxShadow: "0 0 8px rgba(167,139,250,0.3)",
+                  transition: isDragging ? "none" : "height 0.3s ease-out",
+                }}
+              />
+            )}
+            {/* 原始链子 */}
             {Array.from({ length: 8 }, (_, i) => (
               <div
                 key={i}
                 className="w-3 h-5 border-[1.5px] border-purple-400/60 rounded-full"
                 style={{
-                  marginTop: i === 0 ? 0 : "-2px",
+                  marginTop: i === 0 && pullDistance > 0 ? "-2px" : i === 0 ? 0 : "-2px",
                   background: `linear-gradient(180deg, rgba(167,139,250,${0.15 + i * 0.04}), rgba(192,132,252,${0.08 + i * 0.03}))`,
                   boxShadow: `0 0 ${4 + i}px rgba(167,139,250,${0.3 + i * 0.05})`,
-                  transform: `scaleX(${1 - i * 0.03}) translateY(${pullProgress * 20}px)`,
-                  transition: isDragging ? "none" : "transform 0.2s ease",
+                  transform: `scaleX(${1 - i * 0.03})`,
                 }}
               />
             ))}
@@ -304,9 +327,9 @@ export function SolarSystem() {
               style={{
                 background: "radial-gradient(circle at 35% 35%, #e9d5ff, #a78bfa, #7c3aed)",
                 borderRadius: "50%",
-                boxShadow: `0 0 ${12 + pullProgress * 20}px rgba(167,139,250,${0.8 + pullProgress * 0.2}), 0 0 ${20 + pullProgress * 30}px rgba(124,58,237,${0.5 + pullProgress * 0.3})`,
-                transform: `translateY(${pullProgress * 20}px) scale(${1 + pullProgress * 0.2})`,
-                transition: isDragging ? "none" : "transform 0.2s ease",
+                boxShadow: `0 0 ${12 + (pullDistance / maxPullDistance) * 20}px rgba(167,139,250,${0.8 + (pullDistance / maxPullDistance) * 0.2}), 0 0 ${20 + (pullDistance / maxPullDistance) * 30}px rgba(124,58,237,${0.5 + (pullDistance / maxPullDistance) * 0.3})`,
+                transform: `scale(${1 + (pullDistance / maxPullDistance) * 0.3})`,
+                transition: isDragging ? "none" : "transform 0.3s ease-out, box-shadow 0.3s ease-out",
                 animation: isDragging ? "none" : "pulse 2s ease-in-out infinite",
               }}
             >
@@ -317,30 +340,18 @@ export function SolarSystem() {
                   filter: "blur(1px)",
                 }}
               />
+              {/* 提示文字 */}
+              {pullDistance === 0 && (
+                <span
+                  className="absolute top-full left-1/2 -translate-x-1/2 mt-2 text-[10px] text-purple-300/80 whitespace-nowrap"
+                  style={{
+                    animation: "bounce 2s ease-in-out infinite",
+                  }}
+                >
+                  ↓ 下拉探索宇宙
+                </span>
+              )}
             </div>
-            {/* 进度条 */}
-            <div className="w-1 h-16 mt-2 bg-purple-900/30 rounded-full overflow-hidden">
-              <div
-                className="w-full rounded-full transition-none"
-                style={{
-                  height: `${pullProgress * 100}%`,
-                  background: "linear-gradient(180deg, #a78bfa, #7c3aed)",
-                  boxShadow: "0 0 8px rgba(167,139,250,0.6)",
-                }}
-              />
-            </div>
-            {/* 提示文字 */}
-            <span
-              className="mt-2 text-[11px] tracking-widest"
-              style={{
-                color: `rgba(167,139,250,${0.4 + pullProgress * 0.6})`,
-                transform: `translateY(${pullProgress * 10}px)`,
-                transition: isDragging ? "none" : "all 0.2s ease",
-                animation: isDragging ? "none" : "bounce 2s ease-in-out infinite",
-              }}
-            >
-              {pullProgress > 0 ? `${Math.round(pullProgress * 100)}%` : "下拉探索宇宙"}
-            </span>
           </div>
         </div>
       )}
